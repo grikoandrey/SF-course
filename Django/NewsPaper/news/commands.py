@@ -2,6 +2,10 @@
 from news.models import *
 from faker import Faker
 
+# для запуска данного файла запустите команду
+# python manage.py shell < news/commands.py
+# и установите дополнительные библиотеки - pip install faker
+
 fake = Faker()
 
 User.objects.all().delete()
