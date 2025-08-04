@@ -1,7 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-# from django.db.models import Sum
-# from django.utils import timezone
 
 
 class Author(models.Model):
@@ -25,17 +23,23 @@ class Author(models.Model):
         self.author_rating = post_rating * 3 + comment_rating + comments_to_posts_rating
         self.save()
 
+    def __str__(self):
+        return self.author_name.username
+
 
 class Category(models.Model):
     category_name = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return self.category_name
 
 
 class Post(models.Model):
     ARTICLE, NEWS = 'AR', 'NW'
 
     POST_TYPES = [
-        (ARTICLE, 'Статья'),
-        (NEWS, 'Новость'),
+        (ARTICLE, 'article'),
+        (NEWS, 'news'),
     ]
     post_author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post_type = models.CharField(max_length=2, choices=POST_TYPES, default='AR')
@@ -55,6 +59,12 @@ class Post(models.Model):
 
     def preview(self):
         return f'{self.post_text[:124]}...' if len(self.post_text) > 124 else self.post_text
+
+    def __str__(self):
+        categories = ", ".join([cat.category_name for cat in self.post_category.all()])
+        return (f'{self.post_title} ({self.get_post_type_display()})\n'
+                f'{self.post_text[:20]} ...\n'
+                f'| {self.post_author}, ({categories}) {self.post_created.strftime('%d.%m.%Y %H:%M')}, {self.post_rating}')
 
 
 class PostCategory(models.Model):
@@ -76,3 +86,7 @@ class Comment(models.Model):
     def dislike(self):
         self.comment_rating -= 1
         self.save()
+
+    def __str__(self):
+        return (f'{self.comment_text}\n {self.comment_author}, {self.comment_rating}, '
+                f'{self.comment_created.strftime('%d.%m.%Y %H:%M')}')

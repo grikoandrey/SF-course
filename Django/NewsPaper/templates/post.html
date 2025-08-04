@@ -1,0 +1,33 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+<!-- Название у нас будет Product -->
+{% block title %}
+    Portal | post
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+    <div style="margin-top: 40px; text-align: start;">
+        {% if post %}
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 28px; text-align: center;">{{ post.post_title }}</div>
+                <div style="font-size: 16px; margin-bottom: 10px;">{{ post.post_created|date:'d M Y' }}</div>
+                <div style="font-size: 18px;">{{ post.post_text }}</div>
+                <hr style="margin-bottom: 0;">
+                <div style="display: flex; flex-direction: row; gap: 30px; font-size: 16px; justify-content: end;">
+                    <div>author: {{ post.post_author.author_name.username }}</div>
+                    <div>category:
+                        {% for category in post.post_category.all %}
+                            {{ category.category_name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div>rating: {{ post.post_rating }}</div>
+                    <div>type: {{ post.get_post_type_display }}</div>
+                </div>
+            </div>
+        {% else %}
+            <h3>Something wrong, try later!</h3>
+        {% endif %}
+    </div>
+{% endblock content %}

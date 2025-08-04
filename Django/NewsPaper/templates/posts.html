@@ -1,0 +1,40 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+<!-- Название у нас будет products -->
+{% block title %}
+    Portal | posts
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+    <div style="margin-bottom: 40px;">
+        <h1>Our News for your minds!</h1>
+        <h5>in quantity {{ posts|length }} as of {{ time_now|date:'d M Y' }}</h5>
+    </div>
+    <hr>
+    <div style="margin-top: 40px; text-align: start;">
+        {% if posts %}
+            {% for post in posts %}
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 22px;">{{ post.post_title }}</div>
+                    <div style="font-size: 16px; margin-bottom: 10px;">{{ post.post_created|date:'d M Y' }}</div>
+                    <div style="font-size: 18px;">{{ post.post_text|truncatewords:20 }}</div>
+                    <hr style="margin-bottom: 0;">
+                    <div style="display: flex; flex-direction: row; gap: 30px; font-size: 16px; justify-content: end;">
+                        <div>author: {{ post.post_author.author_name.username }}</div>
+                        <div>category:
+                            {% for category in post.post_category.all %}
+                                {{ category.category_name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div>rating: {{ post.post_rating }}</div>
+                        <div>type: {{ post.get_post_type_display }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h2>There is no news today yet!</h2>
+        {% endif %}
+    </div>
+{% endblock content %}
