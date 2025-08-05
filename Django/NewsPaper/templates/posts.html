@@ -1,5 +1,6 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
+{% load censorship_filter %}
 
 <!-- Название у нас будет products -->
 {% block title %}
@@ -17,9 +18,9 @@
         {% if posts %}
             {% for post in posts %}
                 <div style="margin-bottom: 20px;">
-                    <div style="font-size: 22px;">{{ post.post_title }}</div>
+                    <div style="font-size: 22px;">{{ post.post_title|censor }}</div>
                     <div style="font-size: 16px; margin-bottom: 10px;">{{ post.post_created|date:'d M Y' }}</div>
-                    <div style="font-size: 18px;">{{ post.post_text|truncatewords:20 }}</div>
+                    <div style="font-size: 18px;">{{ post.post_text|truncatewords:20|censor }}</div>
                     <hr style="margin-bottom: 0;">
                     <div style="display: flex; flex-direction: row; gap: 30px; font-size: 16px; justify-content: end;">
                         <div>author: {{ post.post_author.author_name.username }}</div>
