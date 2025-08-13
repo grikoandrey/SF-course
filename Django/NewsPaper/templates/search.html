@@ -1,27 +1,36 @@
-<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
 {% load censorship_filter %}
 
+
 {% block title %}
-    Portal | posts
+    Portal | search
 {% endblock title %}
 
 {% block content %}
     <div style="margin-bottom: 40px;">
-        <h1>Our News for your minds!</h1>
-        <h5>in quantity {{ total_posts }} as of {{ time_now|date:'d M Y' }}</h5>
+        <h1>Find any post for you!</h1>
+        <h5>in quantity {{ posts|length }} as of {{ time_now|date:'d M Y' }}</h5>
     </div>
+    <hr>
+    <div>
+        <form style="display: flex; align-items: center;; flex-direction: column; gap: 20px;" action="" method="get">
+            {{ filterset.form.as_div }}
+            <input style="width: 300px;" type="submit" value="Search"/>
+        </form>
+    </div>
+
     <hr>
     <div style="margin-top: 40px; text-align: start;">
         {% if posts %}
             {% for post in posts %}
                 <div style="margin-bottom: 20px;">
-                    <a href="{% url 'post' post.pk %}" style="font-size: 22px; text-decoration: none">{{ post.post_title|censor }}</a>
+                    <a href="{% url 'post' post.pk %}"
+                       style="font-size: 22px; text-decoration: none">{{ post.post_title|censor }}</a>
                     <div style="font-size: 16px; margin-bottom: 10px;">{{ post.post_created|date:'d M Y' }}</div>
                     <div style="font-size: 18px;">{{ post.post_text|truncatewords:20|censor }}</div>
                     <hr style="margin-bottom: 0;">
                     <div style="display: flex; flex-direction: row; gap: 30px; font-size: 16px; justify-content: end;">
-                        <div>author: {{ post.post_author }}</div>
+                        <div>author: {{ post.post_author.author_name.username }}</div>
                         <div>category:
                             {% for category in post.post_category.all %}
                                 {{ category.category_name }}{% if not forloop.last %}, {% endif %}
@@ -38,7 +47,7 @@
     </div>
 
     <div class="pagination" style="justify-content: center; margin-top: 20px; gap: 5px; font-size: 18px;">
-        {# Информация о предыдущих страницах #}
+
         {% if page_obj.has_previous %}
             <a href="?page=1">1</a>
             {% if page_obj.previous_page_number != 1 %}
@@ -46,9 +55,9 @@
                 <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
             {% endif %}
         {% endif %}
-        {# Информация о текущей странице #}
+
         {{ page_obj.number }}
-        {# Информация о следующих страницах #}
+
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
             {% if paginator.num_pages != page_obj.next_page_number %}

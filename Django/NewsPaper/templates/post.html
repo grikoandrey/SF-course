@@ -17,7 +17,7 @@
                 <div style="font-size: 18px;">{{ post.post_text|censor }}</div>
                 <hr style="margin-bottom: 0;">
                 <div style="display: flex; flex-direction: row; gap: 30px; font-size: 16px; justify-content: end;">
-                    <div>author: {{ post.post_author.author_name.username }}</div>
+                    <div>author: {{ post.post_author }}</div>
                     <div>category:
                         {% for category in post.post_category.all %}
                             {{ category.category_name }}{% if not forloop.last %}, {% endif %}
@@ -30,5 +30,10 @@
         {% else %}
             <h3>Something wrong, try later!</h3>
         {% endif %}
+        <div style="display: flex; justify-content: space-between">
+            <a href="{% url 'posts' %}" style="text-decoration: none; font-size: 20px;">Back ...</a>
+            <a href="{% url 'news_edit' post.pk %}" style="text-decoration: none; font-size: 20px;">Change ...</a>
+            <a href="{% url 'news_delete' post.pk %}" style="text-decoration: none; color: darkred; font-size: 20px;">Delete</a>
+        </div>
     </div>
 {% endblock content %}

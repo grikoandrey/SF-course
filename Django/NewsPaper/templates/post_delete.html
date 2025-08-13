@@ -1,0 +1,15 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+    <h2>Attention, you are deleting "{{ object.post_title }}"!</h2>
+    <hr>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>Deleting "{{ object.post_title }}"?</p>
+        <input type="submit" value="Delete?" class="btn btn-warning"/>
+    </form>
+    <div class="mt-4">
+        <a href="{% url 'post' object.pk %}" class="btn btn-primary">Back</a>
+    </div>
+
+{% endblock content %}
