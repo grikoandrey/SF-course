@@ -1,0 +1,31 @@
+{% extends "account/base.html" %}
+
+{% block content_inner %}
+    <section class="allauth_login">
+        <h2>SIGN UP</h2>
+
+        <form method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
+                <div class="form-row">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+
+            <button class="btn btn-primary" type="submit">sign up</button>
+        </form>
+
+        <hr>
+
+        <h5>or use your another accounts:</h5>
+        <div class="social-login">
+            {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+        </div>
+
+        <p class="mt-4">Have account?  <a href="{% url 'account_login' %}">Login</a></p>
+    </section>
+{% endblock %}

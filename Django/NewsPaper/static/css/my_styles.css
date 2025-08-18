@@ -1,0 +1,35 @@
+.allauth_login, .Contacts {
+    ul, li {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        display: flex;
+        justify-content: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        margin-top: 30px;
+    }
+
+    button {
+        width: 200px;
+    }
+}
+
+.social-login li a {
+    display: inline-block;
+    width: 100px;
+    height: 60px;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png') no-repeat center center;
+    background-size: contain;
+    text-indent: -9999px; /* скрываем текст */
+}
+
+
+
