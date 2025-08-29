@@ -22,7 +22,7 @@
                 aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
+        <div class="collapse navbar-collapse justify-content-between" id="navbarResponsive">
             <ul class="navbar-nav ml-auto d-flex gap-5">
                 <li class="nav-item {% if request.path == '/news/' %}active{% endif %}">
                     <a class="nav-link" href="/news/">
@@ -32,38 +32,83 @@
                         {% endif %}
                     </a>
                 </li>
-                <li class="nav-item {% if request.path == '/news/search/' %}active{% endif %}">
-                    <a class="nav-link" href="/news/search/">
-                        Search
-                        {% if request.path == '/news/search/' %}
-                            <span class="sr-only">(current)</span>
-                        {% endif %}
-                    </a>
-                </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'news_create' %}active{% endif %}">
-                    <a class="nav-link" href="{% url 'news_create' %}">
-                        Create News
-                        {% if request.resolver_match.url_name == 'news_create' %}
-                            <span class="sr-only">(current)</span>
-                        {% endif %}
-                    </a>
-                </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'article_create' %}active{% endif %}">
-                    <a class="nav-link" href="{% url 'article_create' %}">
-                        Create Article
-                        {% if request.resolver_match.url_name == 'article_create' %}
-                            <span class="sr-only">(current)</span>
-                        {% endif %}
-                    </a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item {% if request.path == '/news/search/' %}active{% endif %}">
+                        <a class="nav-link" href="/news/search/">
+                            Search
+                            {% if request.path == '/news/search/' %}
+                                <span class="sr-only">(current)</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-link p-0 align-self-center" style="font-size: 12px;">login for search</li>
+                {% endif %}
+                {% if user.is_authenticated and not is_not_author %}
+                    <li class="nav-item {% if request.resolver_match.url_name == 'news_create' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'news_create' %}">
+                            Create News
+                            {% if request.resolver_match.url_name == 'news_create' %}
+                                <span class="sr-only">(current)</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if user.is_authenticated and not is_not_author %}
+                    <li class="nav-item {% if request.resolver_match.url_name == 'article_create' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'article_create' %}">
+                            Create Article
+                            {% if request.resolver_match.url_name == 'article_create' %}
+                                <span class="sr-only">(current)</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endif %}
                 <li class="nav-item {% if request.path == '/contacts/' %}active{% endif %}">
-                    <a class="nav-link" href="/contacts/">
+                    <a class="nav-link" href="{% url 'contacts' %}">
                         Contacts
                         {% if request.path == '/contacts/' %}
                             <span class="sr-only">(current)</span>
                         {% endif %}
                     </a>
                 </li>
+                {% if user.is_authenticated and is_not_author %}
+                    <a class="nav-link" style="color: #dfc2c4" href="{% url 'to_be_author' %}">Be an Author!</a>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav ml-5 d-flex gap-2">
+                {% if user.is_authenticated %}
+                    <svg style="height: 40px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <defs>
+                            <style>.cls-3 {
+                                fill: #6fabe6
+                            }
+
+                            .cls-4 {
+                                fill: #82bcf4
+                            }</style>
+                        </defs>
+                        <g id="User_profile" data-name="User profile">
+                            <path d="M47 24A23 23 0 1 1 12.81 3.91 23 23 0 0 1 47 24z" style="fill:#374f68"/>
+                            <path d="M47 24a22.91 22.91 0 0 1-8.81 18.09A22.88 22.88 0 0 1 27 45C5.28 45-4.37 17.34 12.81 3.91A23 23 0 0 1 47 24z"
+                                  style="fill:#425b72"/>
+                            <path class="cls-3"
+                                  d="M39.2 35.39a19 19 0 0 1-30.4 0 17 17 0 0 1 10.49-8.73 8.93 8.93 0 0 0 9.42 0 17 17 0 0 1 10.49 8.73z"/>
+                            <path class="cls-4"
+                                  d="M39.2 35.39a19 19 0 0 1-4.77 4.49 19 19 0 0 1-15.13-1 7.08 7.08 0 0 1-.51-12.18c.1-.07 0-.05.5-.05a9 9 0 0 0 9.42 0 17 17 0 0 1 10.49 8.74z"/>
+                            <path class="cls-3" d="M33 19a9 9 0 1 1-12.38-8.34A9 9 0 0 1 33 19z"/>
+                            <path class="cls-4"
+                                  d="M33 19a9 9 0 0 1-2.6 6.33c-9.13 3.74-16.59-7.86-9.78-14.67A9 9 0 0 1 33 19z"/>
+                        </g>
+                    </svg>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -77,5 +122,17 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% if messages %}
+    <script>
+        {% for message in messages %}
+            Swal.fire({
+                icon: "{{ message.tags|default:'info' }}",
+                title: "{{ message|escapejs }}"
+            });
+        {% endfor %}
+    </script>
+{% endif %}
 </body>
 </html>

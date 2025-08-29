@@ -16,6 +16,10 @@
                 </div>
             {% endfor %}
 
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+
             <button class="btn btn-primary" type="submit">login</button>
         </form>
 
@@ -26,6 +30,6 @@
             {% include "socialaccount/snippets/provider_list.html" with process="login" %}
         </div>
 
-        <p class="mt-4">Don't have account?  <a href="{% url 'account_signup' %}">Sign Up</a></p>
+        <p class="mt-4">Don't have account? <a href="{% url 'account_signup' %}">Sign Up</a></p>
     </section>
 {% endblock %}
