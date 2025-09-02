@@ -1,0 +1,35 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+{% load censorship_filter %}
+
+{% block title %}
+    Portal | posts
+{% endblock title %}
+
+{% block content %}
+    <section class="subscriptions">
+        <h1 class="subscriptions-title">All our categories</h1>
+        <p class="subscriptions-text">You can subscribe to any category to monitor the updates. When a new post appears,
+            in
+            the topic of interest to
+            you, a notification will come to the mail. Be the first in the news!</p>
+        <hr>
+        <ul class="subscriptions-list">
+            {% for category in categories %}
+                <li class="subscriptions-item">
+                    {{ category.category_name }}
+                    <form method="post" class="subscriptions-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="category_id" value="{{ category.id }}">
+                        {% if category in user_subscriptions %}
+                            <button type="submit" class="btn btn-warning">Отписаться</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">Подписаться</button>
+                        {% endif %}
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+{% endblock content %}

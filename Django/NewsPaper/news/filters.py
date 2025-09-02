@@ -1,7 +1,8 @@
 import django_filters
 from django import forms
 from django_filters import FilterSet
-from .models import Post
+
+from .models import Post, Category
 
 
 class PostFilter(FilterSet):
@@ -12,6 +13,13 @@ class PostFilter(FilterSet):
         widget=forms.DateInput(
             attrs={'type': 'date'}
         )
+    )
+
+    post_category = django_filters.ModelMultipleChoiceFilter(
+        field_name='post_category',
+        queryset=Category.objects.all(),
+        label='Category',
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'category-checkboxes'}),
     )
 
     class Meta:

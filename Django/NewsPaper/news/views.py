@@ -1,13 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from .filters import PostFilter
 from .forms import PostForm
-from .models import Post
+from .models import Post, Category
 from django.utils import timezone
+
+from .utils import send_notifications
 
 
 class PostList(ListView):
@@ -38,6 +40,8 @@ class SearchPostList(LoginRequiredMixin, ListView):
     context_object_name = 'posts'
     paginate_by = 2
 
+    filterset = None
+
     def get_queryset(self):
         queryset = super().get_queryset()
         self.filterset = PostFilter(self.request.GET, queryset)
@@ -61,8 +65,11 @@ class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post_type = form.save(commit=False)
         post_type.post_type = 'NW'
+
+        response = super().form_valid(form)
         messages.success(self.request, "Новость успешно создана!")
-        return super().form_valid(form)
+        send_notifications(self.object, self.request.user)  # <-- отправляем письма подписчикам
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -123,8 +130,10 @@ class ArticleCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         post_type = form.save(commit=False)
         post_type.type = 'AR'
+        response = super().form_valid(form)
         messages.success(self.request, "Статья успешно создана!")
-        return super().form_valid(form)
+        send_notifications(self.object, self.request.user)  # тот же вызов
+        return response
 
     def handle_no_permission(self):
         messages.error(self.request, "Для создания статьи стань автором!")
@@ -138,3 +147,29 @@ class ContactsView(TemplateView):
         ctx = super().get_context_data(**kwargs)
         ctx['is_not_author'] = not self.request.user.groups.filter(name='Authors').exists()
         return ctx
+
+
+class Subscription(LoginRequiredMixin, ListView):
+    model = Category
+    template_name = 'subscription.html'
+    context_object_name = 'categories'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_subscriptions'] = self.request.user.category_subscriptions.all()
+        return context
+
+    @staticmethod
+    def post(request, *args, **kwargs):
+        """Обрабатываем нажатие кнопки подписки/отписки"""
+        category_id = request.POST.get('category_id')
+        category = get_object_or_404(Category, pk=category_id)
+
+        if request.user in category.subscribers.all():
+            category.subscribers.remove(request.user)
+            messages.info(request, f'Вы отписались от категории «{category.category_name}».')
+        else:
+            category.subscribers.add(request.user)
+            messages.success(request, f'Вы подписались на категорию «{category.category_name}».')
+        # остаёмся на той же странице
+        return redirect('subscription')

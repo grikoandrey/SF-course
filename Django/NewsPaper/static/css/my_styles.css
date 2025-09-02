@@ -31,5 +31,29 @@
     text-indent: -9999px; /* скрываем текст */
 }
 
+.category-checkboxes {
+    display: flex;
+    gap: 20px;
+    justify-self: center;
+}
 
+legend {
+    font-size: 16px;
+}
 
+.subscriptions-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 100px;
+    justify-content: center;
+    align-items: center;
+}
+
+.subscriptions-item {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    font-size: 28px;
+}

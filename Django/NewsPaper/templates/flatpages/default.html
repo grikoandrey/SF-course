@@ -10,6 +10,7 @@
     {% load static %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/my_styles.css' %}" rel="stylesheet"/>
+
 </head>
 <body>
 <!-- Responsive navbar-->
@@ -37,6 +38,14 @@
                         <a class="nav-link" href="/news/search/">
                             Search
                             {% if request.path == '/news/search/' %}
+                                <span class="sr-only">(current)</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item {% if request.path == '/news/subscription/' %}active{% endif %}">
+                        <a class="nav-link" href="/news/subscription/">
+                            Be the first
+                            {% if request.path == '/news/subscription/' %}
                                 <span class="sr-only">(current)</span>
                             {% endif %}
                         </a>

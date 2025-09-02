@@ -1,7 +1,6 @@
 {% extends 'flatpages/default.html' %}
 {% load censorship_filter %}
 
-
 {% block title %}
     Portal | search
 {% endblock title %}
@@ -13,7 +12,7 @@
     </div>
     <hr>
     <div>
-        <form style="display: flex; align-items: center;; flex-direction: column; gap: 20px;" action="" method="get">
+        <form style="display: flex; align-items: center;; flex-direction: column; gap: 10px;" action="" method="get">
             {{ filterset.form.as_div }}
             <input style="width: 300px;" type="submit" value="Search"/>
         </form>

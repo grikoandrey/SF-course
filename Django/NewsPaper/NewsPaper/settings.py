@@ -1,5 +1,8 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kg02pge)uyv&uq$x9%ee(=5%3h3pdq&_l1v5xbrhr@eb3o*_&a'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -142,3 +145,9 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 # добавили для замены нашей формы при регистрации вместо "по умолчанию"
 ACCOUNT_FORMS = {'signup': 'accounts.forms.BasicSignupForm'}
+
+EMAIL_HOST = os.getenv('SMTP_YANDEX')
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('YANDEX_USER')
+EMAIL_HOST_PASSWORD = os.getenv('YANDEX_PASSWORD')
+EMAIL_USE_SSL = True
