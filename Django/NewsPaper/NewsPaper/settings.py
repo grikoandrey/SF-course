@@ -21,7 +21,6 @@ ALLOWED_HOSTS = []
 AUTHENTICATION_BACKENDS = [
     # Needed to logIng by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
-
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
@@ -36,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'news',
+    'news.apps.NewsConfig',
     'accounts',
     'django.contrib.sites',
     'django.contrib.flatpages',
@@ -49,6 +48,8 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
+
+DEFAULT_FROM_EMAIL = os.getenv('YANDEX_MAIL')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -143,11 +144,18 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-# добавили для замены нашей формы при регистрации вместо "по умолчанию"
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+# активирует аккаунт сразу, как только мы перейдём по ссылке
 ACCOUNT_FORMS = {'signup': 'accounts.forms.BasicSignupForm'}
+# добавили для замены нашей формы при регистрации вместо "по умолчанию"
 
-EMAIL_HOST = os.getenv('SMTP_YANDEX')
+EMAIL_HOST = os.getenv('SMTP_GMAIL')
 EMAIL_PORT = 465
-EMAIL_HOST_USER = os.getenv('YANDEX_USER')
-EMAIL_HOST_PASSWORD = os.getenv('YANDEX_PASSWORD')
+EMAIL_HOST_USER = os.getenv('GMAIL_MAIL')
+EMAIL_HOST_PASSWORD = os.getenv('GMAIL_PASSWORD')
 EMAIL_USE_SSL = True
+
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# ADMINS = [('<NAME>', '<EMAIL>'), ]
+MANAGERS = [('Andrey', 'griko_aa@mail.ru')]
+SERVER_EMAIL = os.getenv('GMAIL_MAIL')

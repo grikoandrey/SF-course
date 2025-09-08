@@ -24,7 +24,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto d-flex gap-5">
+            <ul class="navbar-nav ml-auto d-flex gap-3">
                 <li class="nav-item {% if request.path == '/news/' %}active{% endif %}">
                     <a class="nav-link" href="/news/">
                         Home
@@ -81,12 +81,17 @@
                         {% endif %}
                     </a>
                 </li>
-                {% if user.is_authenticated and is_not_author %}
-                    <a class="nav-link" style="color: #dfc2c4" href="{% url 'to_be_author' %}">Be an Author!</a>
+                {% if user.is_authenticated %}
+                    {% if is_not_author %}
+                        <a class="nav-link" style="color: #dfc2c4" href="{% url 'toggle_author_status' %}">Be an Author!</a>
+                    {% else %}
+                        <a class="nav-link" style="color: #e95253; font-size: 10px; align-self: center;" href="{% url 'toggle_author_status' %}">Cancel authorship</a>
+                    {% endif %}
                 {% endif %}
             </ul>
-            <ul class="navbar-nav ml-5 d-flex gap-2">
+            <ul class="navbar-nav ml-5 d-flex gap-2 align-items-center">
                 {% if user.is_authenticated %}
+                    <div style="color: whitesmoke; font-size: 12px;">{{ user.username }}</div>
                     <svg style="height: 40px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                         <defs>
                             <style>.cls-3 {

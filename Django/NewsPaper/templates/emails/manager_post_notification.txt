@@ -1,0 +1,7 @@
+Пост был {{ action }}
+
+Заголовок: {{ post.post_title }}
+Дата: {{ post.post_created|date:"d.m.Y H:i" }}
+
+Текст поста:
+{{ post.post_text }}

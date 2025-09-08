@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
@@ -63,8 +64,15 @@ class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'news.add_post'
 
     def form_valid(self, form):
-        post_type = form.save(commit=False)
-        post_type.post_type = 'NW'
+        post = form.save(commit=False)
+        post.post_type = 'NW'
+        post.post_author = self.request.user.author
+
+        try:
+            post.save()  # вызов pre_save сигнала
+        except ValidationError as e:
+            messages.error(self.request, e.message)
+            return redirect('posts')  # или render на ту же форму
 
         response = super().form_valid(form)
         messages.success(self.request, "Новость успешно создана!")
