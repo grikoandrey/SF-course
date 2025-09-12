@@ -12,6 +12,8 @@
     {% endfor %}
 </h2>
 <p> {{ post.post_title }} </p>
-<p> {{ post.post_text|truncatechars:50 }} </p>
+<p> {{ post.post_text|truncatechars:50 }}
+    <a href="{{ site_url }}{{ post.get_absolute_url }}">Читать полностью →</a>
+</p>
 </body>
 </html>

@@ -45,11 +45,15 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
 ]
 
 SITE_ID = 1
 
-DEFAULT_FROM_EMAIL = os.getenv('YANDEX_MAIL')
+DEFAULT_FROM_EMAIL = os.getenv('GMAIL_MAIL')
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,6 +132,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+SITE_URL = os.getenv('SITE_URL')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -143,7 +149,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 # активирует аккаунт сразу, как только мы перейдём по ссылке
 ACCOUNT_FORMS = {'signup': 'accounts.forms.BasicSignupForm'}
@@ -157,5 +163,5 @@ EMAIL_USE_SSL = True
 
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # ADMINS = [('<NAME>', '<EMAIL>'), ]
-MANAGERS = [('Andrey', 'griko_aa@mail.ru')]
+MANAGERS = [('Andrey', 'griko.and@gmail.com')]
 SERVER_EMAIL = os.getenv('GMAIL_MAIL')

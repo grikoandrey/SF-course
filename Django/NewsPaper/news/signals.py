@@ -1,7 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.shortcuts import redirect
 from django.utils import timezone
-from django.contrib import messages
 
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
